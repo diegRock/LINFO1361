@@ -86,6 +86,9 @@ class Node:
         if parent:
             self.depth = parent.depth + 1
 
+    def __str__(self):
+        return str(self.depth) + str(self.state.grid)
+
     def __repr__(self):
         return "<Node {}>".format(self.state)
 
@@ -212,6 +215,7 @@ def depth_first_tree_search(problem):
     while frontier:
         node = frontier.pop()
         explored_nodes += 1
+        print(node)
         if problem.goal_test(node.state):
             return node, explored_nodes, len(frontier)
         frontier.extend(node.expand(problem))
@@ -233,8 +237,10 @@ def depth_first_graph_search(problem):
     explored_nodes = 0
     while frontier:
         node = frontier.pop()
+        print(node)
         explored_nodes += 1
         if problem.goal_test(node.state):
+            problem.goal_test(node.state)
             return node, explored_nodes, len(frontier)
         explored.add(node.state)
         frontier.extend(child for child in node.expand(problem)
@@ -260,10 +266,14 @@ def breadth_first_graph_search(problem):
             continue
         explored_nodes += 1
         explored[node.state] = True
+        cnt = 0
         for child in node.expand(problem):
-            # if hash(child.state) in explored.keys():
-                # print("visited alredy")
+            if hash(child.state) in explored.keys():
+                print("visited already")
+            #print(child)
             if child.state not in explored:
+                # print("goal testing : " + str(child.state))
+                #print(problem.goal_test(child.state))
                 if problem.goal_test(child.state):
                     return child, explored_nodes, len(frontier)
                 frontier.append(child)
